@@ -1,0 +1,115 @@
+import tkinter as tk
+from tkinter import messagebox
+
+class ATMApp:
+    def __init__(self, root):
+        self.root = root
+        self.root.title("SBI ATM Machine")
+        self.balance = 10000
+        self.password = 5678
+
+        self.create_widgets()
+
+    def create_widgets(self):
+        self.intro_label = tk.Label(self.root, text="Kindly insert your card", font=('Arial', 16))
+        self.intro_label.pack(pady=20)
+
+        self.pin_label = tk.Label(self.root, text="Enter your card PIN", font=('Arial', 12))
+        self.pin_label.pack()
+
+        self.pin_entry = tk.Entry(self.root, show="*", font=('Arial', 12))
+        self.pin_entry.pack(pady=5)
+
+        self.enter_pin_button = tk.Button(self.root, text="Enter", command=self.check_pin, font=('Arial', 12))
+        self.enter_pin_button.pack(pady=10)
+
+    def check_pin(self):
+        try:
+            pin = int(self.pin_entry.get())
+            if pin == self.password:
+                self.intro_label.pack_forget()
+                self.pin_label.pack_forget()
+                self.pin_entry.pack_forget()
+                self.enter_pin_button.pack_forget()
+                self.show_options()
+            else:
+                messagebox.showerror("Error", "Incorrect PIN. Please try again.")
+        except ValueError:
+            messagebox.showerror("Error", "Invalid input. Please enter numbers only.")
+
+    def show_options(self):
+        self.option_label = tk.Label(self.root, text="Choose your transaction", font=('calibri', 16))
+        self.option_label.pack(pady=20)
+
+        self.balance_button = tk.Button(self.root, text="Balance", command=self.show_balance, font=('times new roman', 12))
+        self.balance_button.pack(pady=5)
+
+        self.withdraw_button = tk.Button(self.root, text="Withdraw Amount", command=self.withdraw_amount, font=('times new roman', 12))
+        self.withdraw_button.pack(pady=5)
+
+        self.deposit_button = tk.Button(self.root, text="Amount Deposit", command=self.deposit_amount, font=('times new roman', 12))
+        self.deposit_button.pack(pady=5)
+
+        self.exit_button = tk.Button(self.root, text="Exit", command=self.root.quit, font=('times new roman', 12))
+        self.exit_button.pack(pady=5)
+
+    def show_balance(self):
+        messagebox.showinfo("Balance", f"Your balance is {self.balance}")
+
+    def withdraw_amount(self):
+        self.clear_screen()
+
+        self.withdraw_label = tk.Label(self.root, text="Enter amount to withdraw", font=('Arial', 12))
+        self.withdraw_label.pack(pady=10)
+
+        self.withdraw_entry = tk.Entry(self.root, font=('Arial', 12))
+        self.withdraw_entry.pack(pady=5)
+
+        self.withdraw_button_confirm = tk.Button(self.root, text="Withdraw", command=self.process_withdrawal, font=('Arial', 12))
+        self.withdraw_button_confirm.pack(pady=10)
+
+    def process_withdrawal(self):
+        try:
+            withdraw_amount = int(self.withdraw_entry.get())
+            if withdraw_amount <= self.balance:
+                self.balance -= withdraw_amount
+                messagebox.showinfo("Withdrawal", f"{withdraw_amount} has been withdrawn.\nRemaining balance: {self.balance}")
+                self.back_to_options()
+            else:
+                messagebox.showerror("Error", "Insufficient balance.")
+        except ValueError:
+            messagebox.showerror("Error", "Invalid input. Please enter numbers only.")
+
+    def deposit_amount(self):
+        self.clear_screen()
+
+        self.deposit_label = tk.Label(self.root, text="Enter amount to deposit", font=('Arial', 12))
+        self.deposit_label.pack(pady=10)
+
+        self.deposit_entry = tk.Entry(self.root, font=('Arial', 12))
+        self.deposit_entry.pack(pady=5)
+
+        self.deposit_button_confirm = tk.Button(self.root, text="Deposit", command=self.process_deposit, font=('Arial', 12))
+        self.deposit_button_confirm.pack(pady=10)
+
+    def process_deposit(self):
+        try:
+            deposit_amount = int(self.deposit_entry.get())
+            self.balance += deposit_amount
+            messagebox.showinfo("Deposit", f"{deposit_amount} has been deposited.\nNew balance: {self.balance}")
+            self.back_to_options()
+        except ValueError:
+            messagebox.showerror("Error", "Invalid input. Please enter numbers only.")
+
+    def clear_screen(self):
+        for widget in self.root.winfo_children():
+            widget.pack_forget()
+
+    def back_to_options(self):
+        self.clear_screen()
+        self.show_options()
+
+if __name__ == "__main__":
+    root = tk.Tk()
+    app = ATMApp(root)
+    root.mainloop()
