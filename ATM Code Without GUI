@@ -1,0 +1,46 @@
+from optparse import Option
+import time
+print("Kindly insert your card")
+time.sleep(7)
+password=5678
+pin=int(input("enter your card pin"))
+balance=10000 
+if pin==password:
+    while True:
+        print(
+            """
+            1 == Balance
+            2 == Withdraw Amount
+            3 == Amount Deposit
+            4 == Exit
+            """
+        )
+
+        try:
+            Option=int(input("Please enter your choice"))
+        except:
+            print("Please enter valid option")
+
+        if Option==1:
+            print(f"Your Balance is {balance}")
+            print("====================================================================")
+        
+        if Option==2:
+            withdraw_amount=int(input("please enter withdraw_amount"))
+            balance=balance-withdraw_amount
+            print(f"{withdraw_amount} is dedited from your account")
+            print(f"your balance in the account after withdrawal is {balance}")
+            print("====================================================================")
+        
+        if Option==3:
+            deposit_amount=int(input("please enter deposit_amount"))
+            balance=balance+deposit_amount
+            print(f"{deposit_amount} is successfully deposited into your account")
+            print(f"your account balance after depositing is {balance}")
+            print("====================================================================")
+
+        if Option==4:
+            break
+   
+else:
+    print("you have entered the pin wrong\n please try again")
